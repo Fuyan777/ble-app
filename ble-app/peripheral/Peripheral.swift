@@ -19,6 +19,10 @@ class Peripheral: UIViewController, CBPeripheralManagerDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
+        
+        let intNum : Int = 1234
+        let str : String = String(intNum)
+        sendData = str.data(using: .utf8)!
     }
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
@@ -56,7 +60,7 @@ class Peripheral: UIViewController, CBPeripheralManagerDelegate{
             // CBMutableCharacteristicのvalueをCBATTRequestのvalueにセット
             let data: Data = sendData
             print("data: \(String(describing: data))")
-            self.characteristic.value = data
+            self.characteristic.value = sendData
             request.value = self.characteristic.value
             // リクエストに応答
             peripheralManager.respond(to: request, withResult: .success)
@@ -74,16 +78,4 @@ class Peripheral: UIViewController, CBPeripheralManagerDelegate{
         peripheralManager.stopAdvertising()
     }
     
-}
-
-extension Data {
-    
-    init<T>(from value: T) {
-        var v = value
-        self.init(buffer: UnsafeBufferPointer(start: &v, count: 1))
-    }
-    
-    func to<T>(type: T.Type) -> T {
-        return withUnsafeBytes { $0.pointee }
-    }
 }

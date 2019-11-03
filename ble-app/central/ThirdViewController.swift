@@ -215,19 +215,23 @@ extension ThirdViewController: UITableViewDataSource{
                 cell.textLabel!.text = "\(characteristic.uuid)"
                 var strProp = ""
                 if isRead(characteristic: characteristic) {
-                    strProp += "Read "
+                    strProp += "Read!"
                 }
                 if isWrite(characteristic: characteristic) {
-                    strProp += "Write "
+                    strProp += "Write!"
                 }
                 if isNotify(characteristic: characteristic) {
-                    strProp += "Notifiy"
+                    strProp += "Notifiy!"
                 }
                 cell.detailTextLabel!.text = "\(strProp)"
             }
             else if tableView.isEqual(self.readTableView) {
                 let value = self.readValues[indexPath.row]
-                cell.textLabel!.text = "\(value.base64EncodedString())"
+                
+                let str : String = String.init(data: value, encoding: .utf8)!
+                let num : Int = Int(str)!
+                
+                cell.textLabel!.text = "id: \(String(num))"
                 let now = Date()
                 let locale = Locale(identifier: "ja_JP")
                 cell.detailTextLabel!.text = "\(now.description(with: locale))"
